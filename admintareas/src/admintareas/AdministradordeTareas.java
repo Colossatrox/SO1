@@ -10,6 +10,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JOptionPane;
@@ -77,6 +79,7 @@ input.close();
         buttonTask2 = new org.edisoncor.gui.button.ButtonTask();
         labelMetric1 = new org.edisoncor.gui.label.LabelMetric();
         procesos = new org.edisoncor.gui.textField.TextFieldRound();
+        buttonTask1 = new org.edisoncor.gui.button.ButtonTask();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 0, 0));
@@ -124,14 +127,14 @@ input.close();
                 buttonTask2ActionPerformed(evt);
             }
         });
-        getContentPane().add(buttonTask2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 490, 275, 59));
+        getContentPane().add(buttonTask2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 480, 275, 59));
 
         labelMetric1.setBackground(new java.awt.Color(0, 255, 204));
         labelMetric1.setForeground(new java.awt.Color(0, 0, 0));
         labelMetric1.setText("NUM. DE PROCESOS");
         labelMetric1.setColorDeSombra(new java.awt.Color(0, 204, 204));
         labelMetric1.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        getContentPane().add(labelMetric1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 580, -1, -1));
+        getContentPane().add(labelMetric1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 630, -1, -1));
 
         procesos.setForeground(new java.awt.Color(102, 0, 51));
         procesos.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
@@ -140,7 +143,18 @@ input.close();
                 procesosMouseClicked(evt);
             }
         });
-        getContentPane().add(procesos, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 570, 108, -1));
+        getContentPane().add(procesos, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 620, 108, -1));
+
+        buttonTask1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IMAGES/Delete.png"))); // NOI18N
+        buttonTask1.setText(" ");
+        buttonTask1.setCategorySmallFont(new java.awt.Font("Jokerman", 1, 18)); // NOI18N
+        buttonTask1.setDescription("MATAR PROCESO");
+        buttonTask1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonTask1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(buttonTask1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 530, 280, -1));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -171,6 +185,65 @@ input.close();
     private void jTable2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable2MouseClicked
 
     }//GEN-LAST:event_jTable2MouseClicked
+void actualizar(){
+         try {
+           Thread.sleep(1000);             
+        } catch (InterruptedException ex) {
+            Logger.getLogger(AdministradordeTareas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        List<String> processes = listRunningProcesses();
+        String result = "";
+        Iterator<String> it = processes.iterator();
+        int i = 0;
+        this.procesos.setText(String.valueOf(processes.size()));
+        while (it.hasNext()) {
+            result += it.next();
+            i++;
+            if (i==1) {
+                Object[] s={result};
+                mt.addRow(s);
+                result="";
+                i = 0;
+            }
+        }
+}
+    private void buttonTask1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonTask1ActionPerformed
+        //String cm=JOptionPane.showInputDialog("Nombre del Proceso:");
+        String osName = System.getProperty("os.name");
+        String cmd="";
+        DefaultTableModel md = (DefaultTableModel) jTable2.getModel();
+        String dato=String.valueOf(md.getValueAt(jTable2.getSelectedRow(),0));
+        if(dato!=""){
+               if(osName.toUpperCase().contains("WIN")){
+               cmd+="taskkill /IM "+dato;
+           }else{
+               cmd+="taskkill /IM "+dato;
+           }           
+        Process hijo;
+        try {
+            hijo = Runtime.getRuntime().exec(cmd);
+            hijo.waitFor();
+            if ( hijo.exitValue()==0){
+                LimpiarTabla();  
+                actualizar();
+            }else{
+                JOptionPane.showMessageDialog(null,"no pudo matar el proceso!. Excepcion: " + hijo.exitValue()+"n");
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null,"Incapaz de matar Proceso");
+        } catch (InterruptedException e) {
+            JOptionPane.showMessageDialog(null,"Incapaz de matar Proceso");
+
+        }
+           
+       }else{
+           JOptionPane.showMessageDialog(null,"Proceso no seleccionado"); 
+        }      
+    
+       
+        
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonTask1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -207,6 +280,7 @@ input.close();
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private org.edisoncor.gui.button.ButtonTask buttonTask1;
     private org.edisoncor.gui.button.ButtonTask buttonTask2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane2;
