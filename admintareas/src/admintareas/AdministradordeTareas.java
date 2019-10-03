@@ -23,9 +23,11 @@ import javax.swing.table.JTableHeader;
  * @author David Hurtado
  */
 public class AdministradordeTareas extends javax.swing.JFrame {
+    String datos[][];
+    int cant;
     //Definimos la variable TableModel para tomar el modelo de la tabla y asi poder configurarla
     DefaultTableModel TableModel;
-    String[] strHeader={"                Procesos Actuales"};//Titulo de la tabla
+    String[] strHeader={"                Procesos Actuales", "Memoria"};//Titulo de la tabla
     String[][] strData=null; //Declaracion de matriz
     int x,y; //Parametros para mouse
          //Declaracion del administrador
@@ -42,7 +44,7 @@ public class AdministradordeTareas extends javax.swing.JFrame {
         
      }
     //Procedimiento para llamar a todos los procesos del sistema
-    public static List EjecucionProcesos() {
+    public List EjecucionProcesos() {
         List<String> LstrProcesos = new ArrayList<String>(); //Creamos una variable de tipo List (vector)
         try {
             String strLineas;
@@ -61,6 +63,43 @@ public class AdministradordeTareas extends javax.swing.JFrame {
             err.printStackTrace();
         }
         return LstrProcesos; //retornamos el vector
+}
+    
+    public void ProcesosTabla(){
+        cant=0;
+        try {
+            String strLineas;
+            //Llamamos al tasklist 
+            Process p = Runtime.getRuntime().exec("tasklist.exe /nh"); //comando para llamar a mostrar todos los comandos y guardamos en p
+            BufferedReader buffRinput = new BufferedReader //Creacion de variable tipo bufferedreader
+        (new InputStreamReader(p.getInputStream())); //aplicamos inputstreamreader a p
+            while ((strLineas = buffRinput.readLine()) != null) {
+                if (!strLineas.trim().equals("")) {
+                    if (strLineas.contains(".exe")) {
+                        datos[cant][0]=strLineas.substring(0, strLineas.indexOf(".exe")+4);
+                    }else{
+                        datos[cant][0]=strLineas.substring(0,25);
+                    }
+                    try{
+                       if (strLineas.contains("Services ")) {
+                            datos[cant][1]=strLineas.substring(strLineas.indexOf("Services ")+30,strLineas.indexOf("K")+1);
+                        }else if (strLineas.contains("Console ")){
+                            datos[cant][1]=strLineas.substring(strLineas.indexOf("Console ")+30,strLineas.indexOf("K")+1);
+                        }else{
+                            datos[cant][1]=strLineas.substring(strLineas.indexOf(".exe ")+60,strLineas.indexOf("K")+1);
+                        }
+                    }catch(Exception e){
+                        
+                    }
+                    
+                    cant++;
+                }
+            }
+            buffRinput.close();
+        }
+        catch (Exception err) {
+            err.printStackTrace();
+        }
 }
 //Limpia la tabla por medio de un for
     void LimpiarTabla(){
@@ -228,10 +267,15 @@ public class AdministradordeTareas extends javax.swing.JFrame {
     private void buttonTask2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonTask2ActionPerformed
         LimpiarTabla(); //Llamamos al metodo de limpiar tabla
         List<String> LstrProceso = EjecucionProcesos(); //Creacion variable tipo List
-        String strResult = "";
-        Iterator<String> LstrIterador = LstrProceso.iterator();//Creacion variable tipo Iterator
-        int i = 0;
         this.btnProcesos.setText(String.valueOf(LstrProceso.size())); //Colocamos el numero de procesos
+        datos=new String[LstrProceso.size()][2];
+        ProcesosTabla();
+        System.out.println(datos[4][0]);
+        for (int i = 0; i < cant; i++) {
+            Object[] objVar={datos[i][0], datos[i][1]};
+            TableModel.addRow(objVar);
+        }
+        /*
         while (LstrIterador.hasNext()) {
             strResult += LstrIterador.next(); //Copia en la variable strResult
             i++;
@@ -241,7 +285,7 @@ public class AdministradordeTareas extends javax.swing.JFrame {
                 strResult="";
                 i = 0;
             }
-        }
+        }*/
     }//GEN-LAST:event_buttonTask2ActionPerformed
 
     private void tblVistaProcesosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblVistaProcesosMouseClicked
