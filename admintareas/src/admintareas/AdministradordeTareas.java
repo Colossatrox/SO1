@@ -66,33 +66,32 @@ public class AdministradordeTareas extends javax.swing.JFrame {
 }
     
     public void ProcesosTabla(){
-        cant=0;
+        cant=0;// variable para con
         try {
             String strLineas;
             //Llamamos al tasklist 
             Process p = Runtime.getRuntime().exec("tasklist.exe /nh"); //comando para llamar a mostrar todos los comandos y guardamos en p
             BufferedReader buffRinput = new BufferedReader //Creacion de variable tipo bufferedreader
         (new InputStreamReader(p.getInputStream())); //aplicamos inputstreamreader a p
-            while ((strLineas = buffRinput.readLine()) != null) {
+            while ((strLineas = buffRinput.readLine()) != null) {//Mientras la linea que se lea sea diferente de nulo hacemos uqe
                 if (!strLineas.trim().equals("")) {
-                    if (strLineas.contains(".exe")) {
-                        datos[cant][0]=strLineas.substring(0, strLineas.indexOf(".exe")+4);
-                    }else{
-                        datos[cant][0]=strLineas.substring(0,25);
+                    if (strLineas.contains(".exe")) {//si la variable string contiene la palabra .exe
+                        datos[cant][0]=strLineas.substring(0, strLineas.indexOf(".exe")+4);//Este guarda en la matriz el nombre del proceso
+                    }else{//si no
+                        datos[cant][0]=strLineas.substring(0,25);//Solamente guarda el nombre del proceso sin el .exe
                     }
                     try{
-                       if (strLineas.contains("Services ")) {
-                            datos[cant][1]=strLineas.substring(strLineas.indexOf("Services ")+30,strLineas.indexOf("K")+1);
-                        }else if (strLineas.contains("Console ")){
-                            datos[cant][1]=strLineas.substring(strLineas.indexOf("Console ")+30,strLineas.indexOf("K")+1);
-                        }else{
-                            datos[cant][1]=strLineas.substring(strLineas.indexOf(".exe ")+60,strLineas.indexOf("K")+1);
+                       if (strLineas.contains("Services ")) {//si la oalabra contiene Services
+                            datos[cant][1]=strLineas.substring(strLineas.indexOf("Services ")+30,strLineas.indexOf("K")+1);//Guarada la memoria que consume el proceso
+                        }else if (strLineas.contains("Console ")){//si la oalabra contiene Console
+                            datos[cant][1]=strLineas.substring(strLineas.indexOf("Console ")+30,strLineas.indexOf("K")+1);//Guarada la memoria que consume el proceso
+                        }else{// sino
+                            datos[cant][1]=strLineas.substring(strLineas.indexOf(".exe ")+60,strLineas.indexOf("K")+1);//Guarada la memoria que consume el proceso
                         }
-                    }catch(Exception e){
-                        
+                    }catch(Exception e){                        
                     }
                     
-                    cant++;
+                    cant++;//sumamos 1
                 }
             }
             buffRinput.close();
@@ -108,9 +107,6 @@ public class AdministradordeTareas extends javax.swing.JFrame {
             TableModel.removeRow(i); //Eliminar fila en cada iteracion
         }
     }
-
-
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -139,7 +135,7 @@ public class AdministradordeTareas extends javax.swing.JFrame {
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         Options.setBackground(new java.awt.Color(0, 153, 255));
-        Options.setCursor(new java.awt.Cursor(java.awt.Cursor.MOVE_CURSOR));
+        Options.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         Options.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
                 OptionsMouseDragged(evt);
@@ -156,7 +152,7 @@ public class AdministradordeTareas extends javax.swing.JFrame {
         Options.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         MinimizeP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IMAGES/minimize_78340.png"))); // NOI18N
-        MinimizeP.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        MinimizeP.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         MinimizeP.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 MinimizePMouseClicked(evt);
@@ -165,7 +161,7 @@ public class AdministradordeTareas extends javax.swing.JFrame {
         Options.add(MinimizeP, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 10, 40, 30));
 
         CloseProgram.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IMAGES/cerrar.png"))); // NOI18N
-        CloseProgram.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        CloseProgram.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         CloseProgram.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 CloseProgramMouseClicked(evt);
@@ -204,7 +200,7 @@ public class AdministradordeTareas extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(tblVistaProcesos);
 
-        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 270, 320));
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 390, 320));
 
         jLabel1.setFont(new java.awt.Font("Palatino Linotype", 0, 18)); // NOI18N
         jLabel1.setText("ADMINISTRADOR DE TAREAS");
@@ -221,14 +217,14 @@ public class AdministradordeTareas extends javax.swing.JFrame {
                 buttonTask2ActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonTask2, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 150, 275, 59));
+        jPanel1.add(buttonTask2, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 150, 275, 59));
 
         labelMetric1.setBackground(new java.awt.Color(255, 255, 255));
         labelMetric1.setForeground(new java.awt.Color(0, 0, 0));
         labelMetric1.setText("#PROCESOS");
         labelMetric1.setColorDeSombra(new java.awt.Color(102, 153, 255));
         labelMetric1.setFont(new java.awt.Font("Palatino Linotype", 0, 18)); // NOI18N
-        jPanel1.add(labelMetric1, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 360, 120, 30));
+        jPanel1.add(labelMetric1, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 360, 120, 30));
 
         btnProcesos.setForeground(new java.awt.Color(0, 102, 153));
         btnProcesos.setFont(new java.awt.Font("Palatino Linotype", 2, 18)); // NOI18N
@@ -237,7 +233,7 @@ public class AdministradordeTareas extends javax.swing.JFrame {
                 btnProcesosMouseClicked(evt);
             }
         });
-        jPanel1.add(btnProcesos, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 360, 108, -1));
+        jPanel1.add(btnProcesos, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 360, 108, -1));
 
         buttonTask1.setForeground(new java.awt.Color(255, 255, 255));
         buttonTask1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IMAGES/empleado.png"))); // NOI18N
@@ -249,7 +245,7 @@ public class AdministradordeTareas extends javax.swing.JFrame {
                 buttonTask1ActionPerformed(evt);
             }
         });
-        jPanel1.add(buttonTask1, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 210, 280, -1));
+        jPanel1.add(buttonTask1, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 210, 280, -1));
 
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IMAGES/MOUNT.jpg"))); // NOI18N
         jLabel2.setText("jLabel2");
@@ -268,24 +264,13 @@ public class AdministradordeTareas extends javax.swing.JFrame {
         LimpiarTabla(); //Llamamos al metodo de limpiar tabla
         List<String> LstrProceso = EjecucionProcesos(); //Creacion variable tipo List
         this.btnProcesos.setText(String.valueOf(LstrProceso.size())); //Colocamos el numero de procesos
-        datos=new String[LstrProceso.size()][2];
-        ProcesosTabla();
+        datos=new String[LstrProceso.size()][2];//el string daros sera igual a lo que tenfa la lista lstrPRoceso
+        ProcesosTabla();//llamamos al metodo
         System.out.println(datos[4][0]);
-        for (int i = 0; i < cant; i++) {
+        for (int i = 0; i < cant; i++) {//el for ira de 0 hasta el numero de filas que contamos en el metodo Proceso Tabla
             Object[] objVar={datos[i][0], datos[i][1]};
-            TableModel.addRow(objVar);
+            TableModel.addRow(objVar);//Agregamos las fialas a la tabla
         }
-        /*
-        while (LstrIterador.hasNext()) {
-            strResult += LstrIterador.next(); //Copia en la variable strResult
-            i++;
-            if (i==1) {
-                Object[] objVar={strResult};
-                TableModel.addRow(objVar);
-                strResult="";
-                i = 0;
-            }
-        }*/
     }//GEN-LAST:event_buttonTask2ActionPerformed
 
     private void tblVistaProcesosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblVistaProcesosMouseClicked
@@ -297,20 +282,14 @@ void actualizar(){
     }catch (InterruptedException ex) {
         Logger.getLogger(AdministradordeTareas.class.getName()).log(Level.SEVERE, null, ex);
     }
-        List<String> LUPstrProcesos = EjecucionProcesos();
-        String strUPResult = "";
-        Iterator<String> LUPIterad = LUPstrProcesos.iterator();
-        int i = 0;
-        this.btnProcesos.setText(String.valueOf(LUPstrProcesos.size()));//Coloca texto en ese string
-        while (LUPIterad.hasNext()) {
-            strUPResult += LUPIterad.next();
-            i++;
-            if (i==1) {
-                Object[] objVar2={strUPResult};
-                TableModel.addRow(objVar2);
-                strUPResult="";
-                i = 0;
-            }
+         List<String> LstrProceso = EjecucionProcesos(); //Creacion variable tipo List
+        this.btnProcesos.setText(String.valueOf(LstrProceso.size())); //Colocamos el numero de procesos
+        datos=new String[LstrProceso.size()][2];//el string daros sera igual a lo que tenfa la lista lstrPRoceso
+        ProcesosTabla();//llamamos al metodo
+        System.out.println(datos[4][0]);
+        for (int i = 0; i < cant; i++) {//el for ira de 0 hasta el numero de filas que contamos en el metodo Proceso Tabla
+            Object[] objVar={datos[i][0], datos[i][1]};
+            TableModel.addRow(objVar);//Agregamos las fialas a la tabla
         }
 }
     private void buttonTask1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonTask1ActionPerformed
@@ -321,18 +300,18 @@ void actualizar(){
         String strDato=String.valueOf(dftmModelo.getValueAt(tblVistaProcesos.getSelectedRow(),0));
         if(strDato!=""){
             if(strosName.toUpperCase().contains("WIN")){
-                strCmd+="taskkill /IM "+strDato; //TASKKILL ES MATAR EL PROCESO
+                strCmd+="taskkill /IM "+strDato; //TASKKILL ES MATAR EL PROCESO e IM es para especificar el nombre del proceso
             }else{
                 strCmd+="taskkill /IM "+strDato;
             }   
-        Process proHijito;
+        Process proHijito;//una varibale del tipo Proccess
         try {
-            proHijito = Runtime.getRuntime().exec(strCmd);
+            proHijito = Runtime.getRuntime().exec(strCmd);//se ejecutara el comando que tenga strCMD
             proHijito.waitFor();
-            if ( proHijito.exitValue()==0){
-                LimpiarTabla();  
-                actualizar();
-            }else{
+            if ( proHijito.exitValue()==0){//si es igual a 0
+                LimpiarTabla(); //Llamamos al metodo para limpiar la tabla 
+                actualizar();//llamamos al metodo para mostrar de buevo los procesos en la tabla
+            }else{//si no muestra error
                 JOptionPane.showMessageDialog(null,"Fue imposible destruir el Proceso! \nExcepcion: " + proHijito.exitValue()+"n");
             }
         }catch (IOException e){
